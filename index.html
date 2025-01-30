@@ -4,42 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Push Notification Test</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-
-    <h2>Push Notification Example</h2>
-    <button onclick="sendNotification()">Click Me</button>
-
+<body class="container py-5 text-center">
+    <h2 class="mb-4">Push Notification Example</h2>
+    <div class="d-grid gap-3 col-6 mx-auto">
+        <button class="btn btn-primary" onclick="sendBasicNotification()">Basic Notification</button>
+        <button class="btn btn-success" onclick="sendImageNotification()">Notification with Image</button>
+        <button class="btn btn-warning" onclick="sendActionNotification()">Notification with Action</button>
+        <button class="btn btn-danger" onclick="sendSoundNotification()">Notification with Sound</button>
+    </div>
+    
     <script>
-        function sendNotification() {
-            if (!("Notification" in window)) {
-                alert("This browser does not support desktop notifications.");
+        function checkNotificationPermission(callback) {
+            if (!('Notification' in window)) {
+                alert('This browser does not support desktop notifications.');
                 return;
             }
-
-            if (Notification.permission === "granted") {
-                new Notification("Yes, it’s working!");
-            } else if (Notification.permission !== "denied") {
+            if (Notification.permission === 'granted') {
+                callback();
+            } else if (Notification.permission !== 'denied') {
                 Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        new Notification("Yes, it’s working!");
+                    if (permission === 'granted') {
+                        callback();
                     }
                 });
             }
         }
-    </script>
 
+        function sendBasicNotification() {
+            checkNotificationPermission(() => {
+                new Notification('Basic Notification', { body: 'This is a simple notification.' });
+            });
+        }
+
+        function sendImageNotification() {
+            checkNotificationPermission(() => {
+                new Notification('Notification with Image', {
+                    body: 'This notification contains an image.',
+                    icon: 'https://via.placeholder.com/100' // Replace with your image URL
+                });
+            });
+        }
+
+        function sendActionNotification() {
+            checkNotificationPermission(() => {
+                let notification = new Notification('Notification with Action', {
+                    body: 'Click this notification to open Google.',
+                    icon: 'https://via.placeholder.com/100'
+                });
+                notification.onclick = () => {
+                    window.open('https://www.google.com', '_blank');
+                };
+            });
+        }
+
+        function sendSoundNotification() {
+            checkNotificationPermission(() => {
+                new Audio('https://www.soundjay.com/button/beep-07.wav').play();
+                new Notification('Notification with Sound', {
+                    body: 'This notification plays a sound!'
+                });
+            });
+        }
+    </script>
 </body>
 </html>
