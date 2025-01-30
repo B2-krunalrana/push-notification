@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Push Notification Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Push Notification Example</h2>
+    <button onclick="sendNotification()">Click Me</button>
+
+    <script>
+        function sendNotification() {
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notifications.");
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                new Notification("Yes, it’s working!");
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification("Yes, it’s working!");
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
