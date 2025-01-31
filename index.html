@@ -14,8 +14,35 @@
         <button class="btn btn-warning" onclick="sendActionNotification()">Notification with Action</button>
         <button class="btn btn-danger" onclick="sendSoundNotification()">Notification with Sound</button>
     </div>
+
+    <div>
+        <textarea id="userInput" placeholder="Enter your prompt here..."></textarea>
+        <button id="sendPrompt">Send Prompt</button>
+        <div id="response"></div>
+    </div>
     
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userInput = document.getElementById('userInput');
+            const sendPrompt = document.getElementById('sendPrompt');
+            const responseDiv = document.getElementById('response');
+
+            sendPrompt.addEventListener('click', async () => {
+                const prompt = userInput.value;
+                if (prompt) {
+                try {
+                    const session = await window.ai.createTextSession();
+                    console.log(session)
+                    const result = await session.sendPrompt(prompt);
+                    responseDiv.innerText = result;
+                } catch (error) {
+                    console.error('Error:', error);
+                    responseDiv.innerText = 'An error occurred.';
+                }
+                }
+            });
+            });
+
         function checkNotificationPermission(callback) {
             if (!('Notification' in window)) {
                 alert('This browser does not support desktop notifications.');
